@@ -7,6 +7,14 @@ const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: "Number Classification API",
+    endpoint: "/api/classify-number?number=YOUR_NUMBER"
+  });
+});
+
 // Optimized Prime Check
 function isPrime(num) {
   if (num <= 1) return false;
