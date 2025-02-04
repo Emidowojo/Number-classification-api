@@ -5,6 +5,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Root route
@@ -26,7 +27,7 @@ function isPrime(num) {
   return true;
 }
 
-// Perfect Check (unchanged)
+// Perfect Number Check
 function isPerfect(num) {
   if (num <= 1) return false;
   let sum = 1;
@@ -39,18 +40,18 @@ function isPerfect(num) {
   return sum === num;
 }
 
-// Armstrong Check (unchanged)
+// Armstrong Number Check
 function isArmstrong(num) {
-  const str = num.toString();
+  const str = Math.abs(num).toString();
   const power = str.length;
   const sum = str.split('').reduce((acc, digit) => acc + Math.pow(parseInt(digit), power), 0);
-  return sum === num;
+  return sum === Math.abs(num);
 }
 
-// Updated Digit Sum function to handle negative numbers
+// Digit Sum Function
 function getDigitSum(num) {
-  const str = Math.abs(num).toString();
-  return str.split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+  const absNum = Math.abs(Number(num));
+  return absNum.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
 }
 
 // API Endpoint with Timeout and Range Check
@@ -60,7 +61,10 @@ app.get('/api/classify-number', async (req, res) => {
 
     // Input validation
     if (!number || isNaN(number)) {
-      return res.status(400).json({ number: number || "undefined", error: true });
+      return res.status(400).json({ 
+        number: number || "undefined", 
+        error: "Invalid input" 
+      });
     }
 
     const num = parseInt(number, 10);
@@ -76,7 +80,7 @@ app.get('/api/classify-number', async (req, res) => {
     // Fetch fun fact with timeout
     let funFact = "No fun fact available.";
     try {
-      const response = await axios.get(`http://numbersapi.com/${num}/math`, {
+      const response = await axios.get(`http://numbersapi.com/${Math.abs(num)}/math`, {
         timeout: 5000 // 5-second timeout
       });
       funFact = response.data;
@@ -88,15 +92,15 @@ app.get('/api/classify-number', async (req, res) => {
     // Build response
     const result = {
       number: num,
-      is_prime: isPrime(num),
-      is_perfect: isPerfect(num),
+      is_prime: isPrime(Math.abs(num)),
+      is_perfect: isPerfect(Math.abs(num)),
       properties: [],
       digit_sum: getDigitSum(num),
       fun_fact: funFact
     };
 
     // Determine properties
-    if (isArmstrong(num)) {
+    if (isArmstrong(Math.abs(num))) {
       result.properties.push("armstrong");
     }
     result.properties.push(num % 2 === 0 ? "even" : "odd");
