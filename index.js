@@ -47,9 +47,10 @@ function isArmstrong(num) {
   return sum === num;
 }
 
-// Digit Sum (unchanged)
+// Updated Digit Sum function to handle negative numbers
 function getDigitSum(num) {
-  return num.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+  const str = Math.abs(num).toString();
+  return str.split('').reduce((acc, digit) => acc + parseInt(digit), 0);
 }
 
 // API Endpoint with Timeout and Range Check
