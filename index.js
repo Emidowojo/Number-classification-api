@@ -62,11 +62,11 @@ app.get('/api/classify-number', async (req, res) => {
   try {
     const { number } = req.query;
 
-    // Input validation
-    if (!number || isNaN(number)) {
+    // Input validation (reject non-integers)
+    if (!number || isNaN(number) || !Number.isInteger(Number(number))) {
       return res.status(400).json({ 
         number: number || "undefined", 
-        error: "Invalid input" 
+        error: "Invalid input: must be an integer" 
       });
     }
 
@@ -98,7 +98,7 @@ app.get('/api/classify-number', async (req, res) => {
       is_prime: isPrime(Math.abs(num)),
       is_perfect: isPerfect(Math.abs(num)),
       properties: [],
-      digit_sum: Number(getDigitSum(num)), // Explicitly convert to number
+      digit_sum: Number(getDigitSum(num)), // Explicit conversion
       fun_fact: funFact
     };
 
