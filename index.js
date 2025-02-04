@@ -51,7 +51,10 @@ function isArmstrong(num) {
 // Digit Sum Function
 function getDigitSum(num) {
   const absNum = Math.abs(Number(num));
-  return absNum.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+  return absNum
+    .toString()
+    .split('')
+    .reduce((acc, digit) => acc + parseInt(digit, 10), 0);
 }
 
 // API Endpoint with Timeout and Range Check
@@ -95,7 +98,7 @@ app.get('/api/classify-number', async (req, res) => {
       is_prime: isPrime(Math.abs(num)),
       is_perfect: isPerfect(Math.abs(num)),
       properties: [],
-      digit_sum: getDigitSum(num),
+      digit_sum: Number(getDigitSum(num)), // Explicitly convert to number
       fun_fact: funFact
     };
 
